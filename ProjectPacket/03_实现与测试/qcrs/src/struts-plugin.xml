@@ -68,5 +68,28 @@
 			<result name="qrcode" type="qrcode" />
 			<result name="error" type="autoconfig" />
 		</global-results>
+		
+		<!-- Begin Department Action 机构管理  -->
+		<action name="asychDeptTree" method="loadDeptXml" class="com.linkus.sys.auth.action.ProBasicDeptAction">
+		</action>
+		<action name="asynchUserTree" method="loadUserDeptXml" class="com.linkus.sys.auth.action.ProBasicDeptAction">
+		</action>
+		<action name="viewDepartment" method="view" class="com.linkus.sys.auth.action.ProBasicDeptAction">
+			<result name="success" type="dispatcher">
+				/resources/view/departmentView.ftl
+			</result>
+			<result name="error" type="dispatcher">
+				/resources/view/departmentView.ftl
+			</result>
+		</action>
+		<action name="initDeptTree"  class="com.linkus.sysmanage.action.DepartmentAction">
+			<result name="success" type="dispatcher">
+				/resources/view/departmentTree.ftl
+			</result>
+			<result name="error" type="dispatcher">
+				/resources/view/departmentTree.ftl
+			</result>
+		</action>
+		<!-- End Department Action 机构管理 -->
 	</package>
 </struts>

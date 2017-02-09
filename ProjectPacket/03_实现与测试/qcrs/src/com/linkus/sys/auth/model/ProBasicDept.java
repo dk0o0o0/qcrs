@@ -1,30 +1,30 @@
 package com.linkus.sys.auth.model;
-//机构表
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+
+
 
 import org.ironrhino.core.metadata.AutoConfig;
-import org.ironrhino.core.metadata.UiConfig;
-import org.ironrhino.core.model.BaseEntity;
 
+import com.linkus.core.model.MapEntity;
 
-
+/**
+ * 部门
+ * @author dlp
+ */
 @AutoConfig
-@Table(name = "PRO_BASIC_DEPT")
-@Entity
-public class ProBasicDept extends BaseEntity {
+public class ProBasicDept extends MapEntity {
 	private static final long serialVersionUID = 1L;
-
-	private String dept_id; // 部门编号
 	
-	@UiConfig(displayOrder=1)
-	@Column
-	private String dept_name; //部门名称
+	/*** 机构状态 *****/
+	public static final int STATUS_ALL = -1;// 全部
+	public static final int STATUS_UN_USE = 0;// 停用
+	public static final int STATUS_USE = 1;// 启用
 
+	private String dept_id; // 机构编号
+	
+	private String dept_name; //机构名称
+	
 	private String dept_type; //机构类型
 	
-
 	private String par_dept_id;//所属机构
 
 	private String dept_function;//部门职能
@@ -133,8 +133,6 @@ public class ProBasicDept extends BaseEntity {
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
-
-	
 
 
 }
