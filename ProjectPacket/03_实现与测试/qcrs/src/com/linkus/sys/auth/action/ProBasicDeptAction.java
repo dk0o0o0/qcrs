@@ -18,7 +18,9 @@ import com.linkus.core.exception.DAOException;
 import com.linkus.core.util.StringUtil;
 import com.linkus.sys.auth.model.ProBasicDept;
 import com.linkus.sys.auth.service.ProBasicDeptManager;
-@AutoConfig
+
+
+@AutoConfig(namespace="/",actionName="proBasicDept")
 public class ProBasicDeptAction extends EntityAction<ProBasicDept> {
 	
 	/**

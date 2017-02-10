@@ -1,1 +1,2 @@
 lib/* target/* test/classes/* webapp/WEB-INF/classes/* webapp/WEB-INF/lib/*
+.classpath

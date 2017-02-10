@@ -19,6 +19,7 @@ public class MultiManagerImpl extends BaseManagerImpl<Multi> implements MultiMan
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Multi> doSomething(Map<String, Object> map) {
+		System.out.println("=======================");
 		String username = (String) map.get("username");
 		Session session = sessionFactory.getCurrentSession();
 		

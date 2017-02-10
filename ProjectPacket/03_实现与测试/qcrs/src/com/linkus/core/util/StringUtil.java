@@ -23,6 +23,12 @@ import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import net.sourceforge.pinyin4j.PinyinHelper;
+import net.sourceforge.pinyin4j.format.HanyuPinyinCaseType;
+import net.sourceforge.pinyin4j.format.HanyuPinyinOutputFormat;
+import net.sourceforge.pinyin4j.format.HanyuPinyinToneType;
+import net.sourceforge.pinyin4j.format.HanyuPinyinVCharType;
+import net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombination;
 import ognl.Ognl;
 import ognl.OgnlException;
 
@@ -550,5 +556,34 @@ public class StringUtil {
 		else{
 			return "all";
 		}
+	}
+	public static String pinyin(String hanyu) {
+		StringBuilder sb = new StringBuilder();
+		char[] chars = hanyu.toCharArray();
+		for (char c : chars)
+			sb.append(_pinyin(c)[0]);
+		return sb.toString();
+	}
+	public static String pinyinAbbr(String hanyu) {
+		StringBuilder sb = new StringBuilder();
+		char[] chars = hanyu.toCharArray();
+		for (char c : chars)
+			sb.append(_pinyin(c)[0].charAt(0));
+		return sb.toString();
+	}
+	private static String[] _pinyin(char c) {
+		HanyuPinyinOutputFormat f = new HanyuPinyinOutputFormat();
+		f.setToneType(HanyuPinyinToneType.WITHOUT_TONE);
+		f.setVCharType(HanyuPinyinVCharType.WITH_V);
+		f.setCaseType(HanyuPinyinCaseType.LOWERCASE);
+		String[] array = null;
+		try {
+			array = PinyinHelper.toHanyuPinyinStringArray(c, f);
+		} catch (BadHanyuPinyinOutputFormatCombination e) {
+			e.printStackTrace();
+		}
+		if (array == null)// not chinese
+			array = new String[] { String.valueOf(c) };
+		return array;
 	}
 }

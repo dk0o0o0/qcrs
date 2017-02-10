@@ -11,6 +11,11 @@ import org.ironrhino.core.model.BaseEntity;
 @Table(name="PRO_SECURITY_AUTH_RES")
 @Entity
 public class ProSecurityAuth_res  extends BaseEntity{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8296598263667112840L;
+
 	private String auth_id;//角色ID
 	
 	private String res_id; //资源ID

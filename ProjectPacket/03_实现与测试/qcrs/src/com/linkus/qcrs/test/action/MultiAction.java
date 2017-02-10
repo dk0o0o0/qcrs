@@ -47,6 +47,7 @@ public class MultiAction extends EntityAction<Multi> {
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("username", username);
 			List<Multi> list = manager.doSomething(map);
+			System.out.println(list);
 			if(resultPage == null) {
 				resultPage = new ResultPage<Multi>();
 			}
