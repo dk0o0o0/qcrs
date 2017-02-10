@@ -30,7 +30,7 @@
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/ironrhino-assets-1.0.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/ironrhino-common-dictionary-1.0.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/ironrhino-common-setting-1.0.jar"/>
-	<classpathentry kind="lib" path="webapp/WEB-INF/lib/ironrhino-core-1.0.jar"/>
+	<classpathentry kind="lib" path="webapp/WEB-INF/lib/ironrhino-core-1.0.jar" sourcepath="F:/Link_us_Tech/code/ironrhino"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/ironrhino-hibernate-config-1.0.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/ironrhino-security-1.0.jar"/>
 	<classpathentry kind="lib" path="webapp/WEB-INF/lib/ironrhino-security-config-1.0.jar"/>

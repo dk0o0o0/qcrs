@@ -1,32 +1,25 @@
 package com.linkus.sys.auth.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 import org.ironrhino.common.model.Coordinate;
 import org.ironrhino.common.util.LocationUtils;
 import org.ironrhino.core.aop.PublishAware;
 import org.ironrhino.core.metadata.AutoConfig;
 import org.ironrhino.core.metadata.FullnameSeperator;
-import org.ironrhino.core.metadata.Hidden;
 import org.ironrhino.core.metadata.NotInCopy;
-import org.ironrhino.core.metadata.UiConfig;
-import org.ironrhino.core.model.Attribute;
 import org.ironrhino.core.model.BaseTreeableEntity;
 import org.ironrhino.core.search.elasticsearch.annotations.Index;
 import org.ironrhino.core.search.elasticsearch.annotations.Searchable;
 import org.ironrhino.core.search.elasticsearch.annotations.SearchableProperty;
+import org.ironrhino.core.util.StringUtils;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.linkus.core.util.StringUtil;
 
 @PublishAware
 @AutoConfig
@@ -34,12 +27,10 @@ import com.linkus.core.util.StringUtil;
 @Entity
 @Table(name = "dept")
 @FullnameSeperator(independent = false, seperator = "")
-public class Dept extends BaseTreeableEntity<Dept>  {
+public class Dept extends BaseTreeableEntity<Dept> {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 5986581174733245324L;
+	private static final long serialVersionUID = 8878381261391688086L;
+
 	private String fullname;
 
 	@Column(length = 6)
@@ -53,110 +44,105 @@ public class Dept extends BaseTreeableEntity<Dept>  {
 	@Embedded
 	private Coordinate coordinate;
 
+	public Dept() {
+
+	}
+
+	public Dept(String name) {
+		this.name = name;
+	}
+
+	public Dept(String name, int displayOrder) {
+		this.name = name;
+		this.displayOrder = displayOrder;
+	}
+
+	public String getAreacode() {
+		return areacode;
+	}
+
+	public void setAreacode(String areacode) {
+		this.areacode = areacode;
+	}
+
+	@Override
 	@NotInCopy
-	@Transient
-	@UiConfig(hiddenInList = @Hidden(true))
-	private List<Attribute> attributes = new ArrayList<Attribute>();
-	
-	public Dept(){
-		
-	}
-	
-     public Dept(String name){
-    	 this.name = name;
-	}
-     
-     public Dept(String name,int displayOrder){
-    	 this.name = name;
-    	 this.displayOrder = displayOrder;
+	@SearchableProperty(boost = 2)
+	@Access(AccessType.PROPERTY)
+	public String getFullname() {
+		if (fullname == null)
+			fullname = super.getFullname();
+		return fullname;
 	}
 
-     public String getAreacode() {
- 		return areacode;
- 	}
+	public void setFullname(String fullname) {
+		this.fullname = fullname;
+	}
 
- 	public void setAreacode(String areacode) {
- 		this.areacode = areacode;
- 	}
+	@Override
+	public void setParent(Dept parent) {
+		super.setParent(parent);
+		if (this.fullname != null)
+			this.fullname = super.getFullname();
+	}
 
- 	@Override
- 	@NotInCopy
- 	@SearchableProperty(boost = 2)
- 	@Access(AccessType.PROPERTY)
- 	public String getFullname() {
- 		if (fullname == null)
- 			fullname = super.getFullname();
- 		return fullname;
- 	}
+	public String getPostcode() {
+		return postcode;
+	}
 
- 	public void setFullname(String fullname) {
- 		this.fullname = fullname;
- 	}
+	public void setPostcode(String postcode) {
+		this.postcode = postcode;
+	}
 
- 	@Override
- 	public void setParent(Dept parent) {
- 		super.setParent(parent);
- 		if (this.fullname != null)
- 			this.fullname = super.getFullname();
- 	}
+	public Integer getRank() {
+		return rank;
+	}
 
- 	public String getPostcode() {
- 		return postcode;
- 	}
+	public void setRank(Integer rank) {
+		this.rank = rank;
+	}
 
- 	public void setPostcode(String postcode) {
- 		this.postcode = postcode;
- 	}
+	public Coordinate getCoordinate() {
+		return coordinate;
+	}
 
- 	public Integer getRank() {
- 		return rank;
- 	}
+	public void setCoordinate(Coordinate coordinate) {
+		this.coordinate = coordinate;
+	}
 
- 	public void setRank(Integer rank) {
- 		this.rank = rank;
- 	}
+	@JsonIgnore
+	@SearchableProperty(boost = 3, index = Index.NOT_ANALYZED)
+	public String getNameAsPinyin() {
+		return StringUtils.pinyin(name);
+	}
 
- 	public Coordinate getCoordinate() {
- 		return coordinate;
- 	}
+	@JsonIgnore
+	@SearchableProperty(boost = 3, index = Index.NOT_ANALYZED)
+	public String getNameAsPinyinAbbr() {
+		return StringUtils.pinyinAbbr(name);
+	}
 
- 	public void setCoordinate(Coordinate coordinate) {
- 		this.coordinate = coordinate;
- 	}
+	@JsonIgnore
+	@SearchableProperty(boost = 3, index = Index.NOT_ANALYZED)
+	public String getShortFullname() {
+		return LocationUtils.shortenAddress(getFullname());
+	}
 
- 	@JsonIgnore
- 	@SearchableProperty(boost = 3, index = Index.NOT_ANALYZED)
- 	public String getNameAsPinyin() {
- 		return StringUtil.pinyin(name);
- 	}
+	public Dept getDescendantOrSelfByAreacode(String areacode) {
+		if (areacode == null)
+			throw new IllegalArgumentException("areacode must not be null");
+		if (areacode.equals(this.getAreacode()))
+			return this;
+		for (Dept t : getChildren()) {
+			if (areacode.equals(t.getAreacode())) {
+				return t;
+			} else {
+				Dept tt = t.getDescendantOrSelfByAreacode(areacode);
+				if (tt != null)
+					return tt;
+			}
+		}
+		return null;
+	}
 
- 	@JsonIgnore
- 	@SearchableProperty(boost = 3, index = Index.NOT_ANALYZED)
- 	public String getNameAsPinyinAbbr() {
- 		return StringUtil.pinyinAbbr(name);
- 	}
-
- 	@JsonIgnore
- 	@SearchableProperty(boost = 3, index = Index.NOT_ANALYZED)
- 	public String getShortFullname() {
- 		return LocationUtils.shortenAddress(getFullname());
- 	}
-
- 	public Dept getDescendantOrSelfByAreacode(String areacode) {
- 		if (areacode == null)
- 			throw new IllegalArgumentException("areacode must not be null");
- 		if (areacode.equals(this.getAreacode()))
- 			return this;
- 		for (Dept t : getChildren()) {
- 			if (areacode.equals(t.getAreacode())) {
- 				return t;
- 			} else {
- 				Dept tt = t.getDescendantOrSelfByAreacode(areacode);
- 				if (tt != null)
- 					return tt;
- 			}
- 		}
- 		return null;
- 	}
-	
 }

@@ -6,8 +6,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import javax.persistence.ManyToOne;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts2.ServletActionContext;
 import org.hibernate.criterion.DetachedCriteria;
@@ -21,7 +19,7 @@ import org.ironrhino.core.search.SearchService.Mapper;
 import org.ironrhino.core.search.elasticsearch.ElasticSearchCriteria;
 import org.ironrhino.core.search.elasticsearch.ElasticSearchService;
 import org.ironrhino.core.service.EntityManager;
-import org.ironrhino.core.struts.EntityAction;
+import org.ironrhino.core.struts.BaseAction;
 import org.ironrhino.core.util.ClassScanner;
 import org.ironrhino.core.util.HtmlUtils;
 import org.springframework.beans.BeanUtils;
@@ -35,14 +33,12 @@ import com.opensymphony.xwork2.validator.annotations.Validations;
 import com.opensymphony.xwork2.validator.annotations.ValidatorType;
 
 @SuppressWarnings(value = { "rawtypes", "unchecked" })
-public class DeptAction extends EntityAction<Dept> {
+public class DeptAction extends BaseAction {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 85722399263766362L;
+	private static final long serialVersionUID = -4643055307938016102L;
+
 	private Dept dept;
-	
+
 	private Long parent;
 
 	private transient EntityManager<Dept> entityManager;
@@ -130,7 +126,7 @@ public class DeptAction extends EntityAction<Dept> {
 			String query = keyword.trim();
 			ElasticSearchCriteria criteria = new ElasticSearchCriteria();
 			criteria.setQuery(query);
-			criteria.setTypes(new String[] { "region" });
+			criteria.setTypes(new String[] { "dept" });
 			criteria.addSort("displayOrder", false);
 			list = elasticSearchService.search(criteria, new Mapper<Dept>() {
 				@Override
@@ -152,16 +148,16 @@ public class DeptAction extends EntityAction<Dept> {
 	}
 
 	@Override
-	@Validations(requiredStrings = { @RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "region.name", trim = true, key = "validation.required") }, stringLengthFields = {
-			@StringLengthFieldValidator(type = ValidatorType.FIELD, fieldName = "region.areacode", maxLength = "6", key = "validation.invalid"),
-			@StringLengthFieldValidator(type = ValidatorType.FIELD, fieldName = "region.postcode", maxLength = "6", key = "validation.invalid") })
+	@Validations(requiredStrings = { @RequiredStringValidator(type = ValidatorType.FIELD, fieldName = "dept.name", trim = true, key = "validation.required") }, stringLengthFields = {
+	@StringLengthFieldValidator(type = ValidatorType.FIELD, fieldName = "dept.areacode", maxLength = "6", key = "validation.invalid"),
+	@StringLengthFieldValidator(type = ValidatorType.FIELD, fieldName = "dept.postcode", maxLength = "6", key = "validation.invalid") })
 	public String save() {
 		Collection<Dept> siblings = null;
 		if (dept.isNew()) {
 			if (parent != null) {
-				Dept parentRegion = entityManager.get(parent);
-				dept.setParent(parentRegion);
-				siblings = parentRegion.getChildren();
+				Dept parentDept = entityManager.get(parent);
+				dept.setParent(parentDept);
+				siblings = parentDept.getChildren();
 			} else {
 				DetachedCriteria dc = entityManager.detachedCriteria();
 				dc.add(Restrictions.isNull("parent"));
@@ -171,7 +167,7 @@ public class DeptAction extends EntityAction<Dept> {
 			}
 			for (Dept sibling : siblings)
 				if (sibling.getName().equals(dept.getName())) {
-					addFieldError("region.name",
+					addFieldError("dept.name",
 							getText("validation.already.exists"));
 					return INPUT;
 				}
@@ -179,7 +175,7 @@ public class DeptAction extends EntityAction<Dept> {
 			Dept temp = dept;
 			dept = entityManager.get(temp.getId());
 			if (ServletActionContext.getRequest().getParameter(
-					"region.coordinate") != null) {
+					"dept.coordinate") != null) {
 				dept.setCoordinate(temp.getCoordinate());
 			}
 			if (!dept.getName().equals(temp.getName())) {
@@ -194,7 +190,7 @@ public class DeptAction extends EntityAction<Dept> {
 				}
 				for (Dept sibling : siblings)
 					if (sibling.getName().equals(temp.getName())) {
-						addFieldError("region.name",
+						addFieldError("dept.name",
 								getText("validation.already.exists"));
 						return INPUT;
 					}
@@ -231,9 +227,9 @@ public class DeptAction extends EntityAction<Dept> {
 	}
 
 	@Validations(requiredFields = {
-			@RequiredFieldValidator(type = ValidatorType.FIELD, fieldName = "region.id", key = "validation.required"),
-			@RequiredFieldValidator(type = ValidatorType.FIELD, fieldName = "region.coordinate.latitude", key = "validation.required"),
-			@RequiredFieldValidator(type = ValidatorType.FIELD, fieldName = "region.coordinate.longitude", key = "validation.required") })
+	@RequiredFieldValidator(type = ValidatorType.FIELD, fieldName = "dept.id", key = "validation.required"),
+	@RequiredFieldValidator(type = ValidatorType.FIELD, fieldName = "dept.coordinate.latitude", key = "validation.required"),
+	@RequiredFieldValidator(type = ValidatorType.FIELD, fieldName = "dept.coordinate.longitude", key = "validation.required") })
 	public String mark() {
 		Dept temp = dept;
 		dept = entityManager.get(dept.getId());
@@ -383,5 +379,4 @@ public class DeptAction extends EntityAction<Dept> {
 			list.add(new LabelValue(r.getFullname(), r.getId().toString()));
 		return JSON;
 	}
-
 }

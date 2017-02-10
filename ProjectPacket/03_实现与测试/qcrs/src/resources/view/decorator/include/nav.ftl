@@ -6,7 +6,7 @@
     	<ul>  		
     		<li><a href="#" title="<@url value="/user"/>" class="view"><i class="circle-full"></i><span>系统用户管理</span></a></li>
     		<li><a href="#" title="<@url value="/proBasicDept"/>" class="view"><i class="circle-full"></i><span>机构管理</span></a></li>
-    		<li><a href="#" title="<@url value="/deptTree"/>" class="view"><i class="circle-full"></i><span>${action.getText('dept')}</span></a></li>
+    		<li><a href="#" title="<@url value="/dept"/>" class="view"><i class="circle-full"></i><span>${action.getText('dept')}</span></a></li>
     		<li><a href="#" title="<@url value="/roles"/>" class="view"><i class="circle-full"></i><span>角色管理</span></a></li>
     		<li><a href="#" title="<@url value="/users"/>" class="view"><i class="circle-full"></i><span>用户管理</span></a></li>
     		<li><a href="#" title="<@url value="/single"/>" class="view"><i class="circle-full"></i><span>单实体测试</span></a></li>
