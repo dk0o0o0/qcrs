@@ -34,11 +34,7 @@
 		"sub_branch_code":{"width":"70px","alias":"父节点号"}
 		
 	}>
-
-			
 	<@richtable entityName="users" showActionColumn=false showBottomButtons=false columns=columns actionColumnButtons=false bottomButtons=false searchable=false />
-	<a class="btn ajax view" href="${actionBaseUrl}/delete">删除</a> 
-	       			   		
 	
 </body>
 <html>
